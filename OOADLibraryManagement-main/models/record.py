@@ -11,3 +11,4 @@ class Record(SQLModel, table=True):
     borrowed_time: datetime = Field(...)
     expected_return_time: datetime = Field(...)
     actual_return_time: Optional[datetime] = Field(default=None)
+    returned: bool = Field(default=False)

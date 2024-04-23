@@ -1,4 +1,4 @@
-from randomdata import books, users, borrow_records
+from randomdata import books,users,borrow_records
 
 book_name_input = input("請輸入要查詢的書籍名稱：")
 
@@ -10,7 +10,7 @@ for record in borrow_records:
         print("借書人:", users[record.user_id - 1].name)
         print("借書時間:", record.borrowed_time)
         print("預計歸還時間:", record.expected_return_time)
-        if record.actual_return_time:  # 如果实际归还时间不为空，则表示书籍已归还
+        if record.actual_return_time:
             print("實際歸還時間:", record.actual_return_time)
         else:
             print("此書籍尚未歸還")
