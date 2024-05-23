@@ -5,6 +5,8 @@ from sqlmodel import Session, col, select
 
 from dbHelper import get_db
 from models.user import Role, User
+from models.book import Book
+from models.record import Record
 
 router = APIRouter(tags=["user"], prefix="/user")
 
@@ -56,3 +58,29 @@ async def login_user(request: Request, db: Session = Depends(get_db)):
     stmt = select(User).where(col(User.name) == request.headers.get("username"))
 
     NotImplementedError("Implement the login logic here")
+
+
+@router.get("/query-record")
+async def query_record(book_name: str, db: Session = Depends(get_db)):
+    # 查詢借閱紀錄
+    record = db.query(Record).join(Book).filter(Book.book_name == book_name).first()
+
+    if record:
+        # 找到借閱紀錄，提取相關訊息
+        borrower = db.query(User).filter(User.id == record.user_id).first()
+        borrower_name = borrower.name if borrower else None
+        borrowed_time = record.borrowed_time
+        expected_return_time = record.expected_return_time
+        actual_return_time = record.actual_return_time
+        
+        # 將信息組合成字典返回給前端
+        result = {
+            'borrower_name': borrower_name,
+            'borrowed_time': borrowed_time,
+            'expected_return_time': expected_return_time,
+            'actual_return_time': actual_return_time
+        }
+        return result
+    else:
+        # 如果沒有找到借閱紀錄，可能書籍不在列表中
+        return {"message": "No record found for the book."}
