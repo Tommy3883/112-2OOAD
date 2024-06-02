@@ -28,16 +28,29 @@ def read_records(
     skip = (page - 1) * per_page
     records = db.exec(select(Record).offset(skip).limit(per_page)).all()
     return records
-
-@router.get("/query-record")
-async def query_record(book_name: str, db: Session = Depends(get_db)):
-    # 使用Record類中的方法查詢借閱紀錄
-    record = Record.get_record_by_book_name(db, book_name)
+    
+@router.get("/search_record")
+async def search_record(book_name: str, db: Session = Depends(get_db)):
+    # 查詢 Book 表，獲取 Book 的 id
+    from models.book import Book
+    book = db.exec(select(Book).where(Book.name == book_name)).first()
+    
+    if not book:
+        raise HTTPException(status_code=404, detail="No book found with the given name.")
+    
+    # 使用 Book 的 id 查詢 Record 表
+    record = Record.get_record_by_book_id(db, book.id)
     
     if record:
-        # 使用Record實例的方法提取借閱信息
-        result = record.get_borrower_info(db)
-        return result
+        # 呈現 Record 資訊
+        return {
+            'id': record.id,
+            'user_id': record.user_id,
+            'book_id': record.book_id,
+            'borrowed_time': record.borrowed_time,
+            'expected_return_time': record.expected_return_time,
+            'actual_return_time': record.actual_return_time
+            #'returned': record.returned
+        }
     else:
-        # 如果沒有找到借閱紀錄，返回相應消息
         raise HTTPException(status_code=404, detail="No record found for the book.")
