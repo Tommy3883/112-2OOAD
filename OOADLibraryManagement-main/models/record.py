@@ -19,10 +19,10 @@ class Record(SQLModel, table=True):
     actual_return_time: Optional[datetime] = Field(default=None)
     #returned: bool = Field(default=False)
     
-    @classmethod
-    def get_record_by_book_id(cls, db: Session, id: int):
-            return db.exec(
-                select(cls)
-                .where(cls.book_id == id)
-            ).first()
+    # @classmethod
+    # def get_record_by_book_id(cls, db: Session, id: int):
+    #         return db.exec(
+    #             select(cls)
+    #             .where(cls.book_id == id)
+    #         ).first()
     

@@ -50,7 +50,7 @@ async def search_record(book_name: str, db: Session = Depends(get_db)):
         return {
             'id': record.id,
             'user_id': record.user_id,
-            'book_id': record.book_id,
+            'book_name': book.book_name,
             'borrowed_time': record.borrowed_time,
             'expected_return_time': record.expected_return_time,
             'actual_return_time': record.actual_return_time
@@ -58,8 +58,3 @@ async def search_record(book_name: str, db: Session = Depends(get_db)):
         }
     else:
         raise HTTPException(status_code=404, detail="No record found for the book.")
-  
-#   except SQLAlchemyError as e:
-#          raise HTTPException(status_code=500, detail=f"Database error: {str(e)}")
-#   except Exception as e:
-#          raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")

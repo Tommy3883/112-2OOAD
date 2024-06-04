@@ -25,7 +25,7 @@ async def query_record(book_name: str):
         expected_return_time = record.expected_return_time
         actual_return_time = record.actual_return_time
         
-        # 江信息組合成字典返還給前端
+        # 將信息組合成字典返還給前端
         result = {
             'borrower_name': borrower_name,
             'borrowed_time': borrowed_time,

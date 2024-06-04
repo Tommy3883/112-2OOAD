@@ -22,7 +22,6 @@ python -m venv env
 .\env\Scripts\activate
 pip install poetry
 poetry install --no-root
-New-Item demo.sqlite -type file
 python main.py
 ```
 
